@@ -99,7 +99,6 @@ export default function Page() {
     transition: "transform 0.2s ease, box-shadow 0.2s ease",
   }}
 >
-          >
             <h2>{item.name}</h2>
 
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
