@@ -81,24 +81,35 @@ export default function Page() {
 <div
   key={item.name}
   onClick={() => router.push(`/item/${item.name}`)}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.transform = "translateY(-5px)"
-    e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
+
+  onMouseDown={(e) => {
+    e.currentTarget.style.transform = "scale(0.96)"
+    e.currentTarget.style.boxShadow = "0 3px 10px rgba(0,0,0,0.2)"
   }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.transform = "translateY(0)"
+  onMouseUp={(e) => {
+    e.currentTarget.style.transform = "scale(1)"
     e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
   }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "scale(1)"
+    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
+  }}
+  onTouchStart={(e) => {
+    e.currentTarget.style.transform = "scale(0.96)"
+  }}
+  onTouchEnd={(e) => {
+    e.currentTarget.style.transform = "scale(1)"
+  }}
+
   style={{
-    border: "4px solid black",
+    cursor: "pointer",
+    border: "2px solid black",
     padding: 20,
-    width: "100%",
-    maxWidth: "300px",
-    margin: "0 auto",
+    width: "300px",
     borderRadius: "12px",
     boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
     background: "#fff",
-    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    transition: "transform 0.1s ease, box-shadow 0.1s ease",
   }}
 >
             <h2>{item.name}</h2>
