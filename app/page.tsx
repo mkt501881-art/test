@@ -2,6 +2,7 @@
 
 export const dynamic = "force-dynamic"
 
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { signOut, useSession } from "next-auth/react"
 
@@ -12,7 +13,8 @@ type Item = {
 
 export default function Page() {
   const { data: session } = useSession()
-
+  const router = useRouter()
+  
   const [data, setData] = useState<Item[]>([])
   const [updatedAt, setUpdatedAt] = useState("")
 
@@ -78,6 +80,7 @@ export default function Page() {
         {data.map(item => (
 <div
   key={item.name}
+  onClick={() => router.push(`/item/${item.name}`)}
   onMouseEnter={(e) => {
     e.currentTarget.style.transform = "translateY(-5px)"
     e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
