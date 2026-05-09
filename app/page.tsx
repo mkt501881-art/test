@@ -100,7 +100,15 @@ export default function Page() {
   onTouchEnd={(e) => {
     e.currentTarget.style.transform = "scale(1)"
   }}
-
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "translateY(-5px)"
+    e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "translateY(0)"
+    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
+  }}
+  
   style={{
     cursor: "pointer",
     border: "2px solid black",
