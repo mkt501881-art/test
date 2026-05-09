@@ -68,12 +68,12 @@ export default function Page() {
         更新
       </button>
 
-      <div
+<div
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
     justifyContent: "center",
-    gap: 40,
+    gap: 20,
   }}
 >
         {data.map(item => (
