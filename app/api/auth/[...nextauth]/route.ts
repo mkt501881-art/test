@@ -9,9 +9,8 @@ const handler = NextAuth({
     }),
   ],
 callbacks: {
-  async signIn({ profile }) {
+  async signIn({ profile }: any) {
     if (!profile?.email) return false
-
     return profile.email.endsWith("@stg.nada.ac.jp")
   },
 },
