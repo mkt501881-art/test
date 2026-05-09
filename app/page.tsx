@@ -16,9 +16,9 @@ export default function Page() {
   return (
     <>
       <p>ログイン中：{session.user?.email}</p>
-      <button onClick={() => signOut()}>
-        ログアウト
-      </button>
+<button onClick={() => signOut({ callbackUrl: "/" })}>
+  ログアウト
+</button>
     </>
   )
 }
