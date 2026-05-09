@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 type Item = {
   name: string
@@ -13,6 +14,7 @@ type Item = {
 export default function ItemPage() {
   const params = useParams()
   const name = params.name
+  const router = useRouter()
 
   const [item, setItem] = useState<Item | null>(null)
 
@@ -34,6 +36,19 @@ export default function ItemPage() {
 
   return (
     <div style={{ padding: 40 }}>
+      
+      <button
+  onClick={() => router.push("/")}
+  style={{
+    marginBottom: 20,
+    padding: "8px 16px",
+    border: "2px solid black",
+    cursor: "pointer",
+  }}
+>
+  ← ホームに戻る
+</button>
+      
       {/* タイトル */}
       <h1 style={{ fontSize: "32px", marginBottom: 20 }}>
         {item.name}
