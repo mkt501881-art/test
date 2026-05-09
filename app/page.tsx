@@ -77,15 +77,28 @@ export default function Page() {
   }}
 >
         {data.map(item => (
-          <div
-            key={item.name}
-            style={{
-              border: "4px solid black",
-              padding: 20,
-              width: "100%",        // ← 固定widthやめる
-              maxWidth: "300px",    // ← 上限だけ決める
-              margin: "0 auto",     // ← 中央寄せ
-            }}
+<div
+  key={item.name}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "translateY(-5px)"
+    e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "translateY(0)"
+    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
+  }}
+  style={{
+    border: "4px solid black",
+    padding: 20,
+    width: "100%",
+    maxWidth: "300px",
+    margin: "0 auto",
+    borderRadius: "12px",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+    background: "#fff",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+  }}
+>
           >
             <h2>{item.name}</h2>
 
