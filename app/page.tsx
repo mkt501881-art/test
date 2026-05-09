@@ -72,7 +72,6 @@ export default function Page() {
   style={{
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
-    justifyContent: "center",   // ← ここ追加
     gap: 40,
   }}
 >
