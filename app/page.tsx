@@ -13,7 +13,7 @@ export default function Page() {
 
 useEffect(() => {
   fetch(
-    "https://raw.githubusercontent.com/あなたのユーザー名/リポジトリ名/main/status.json?t=" + Date.now(),
+    "https://raw.githubusercontent.com/mkt501881-art/status/refs/heads/main/status.json?t=" + Date.now(),
     { cache: "no-store" }
   )
     .then(res => res.json())
