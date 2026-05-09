@@ -71,7 +71,7 @@ export default function Page() {
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
+    gridTemplateColumns: "repeat(auto-fit, 300px)", // ← シンプル固定
     justifyContent: "center",
     gap: 20,
   }}
