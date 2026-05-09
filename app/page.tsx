@@ -68,7 +68,13 @@ export default function Page() {
         更新
       </button>
 
-      <div style={{ display: "flex", gap: 40 }}>
+      <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    gap: 40,
+  }}
+>
         {data.map(item => (
           <div
             key={item.name}
