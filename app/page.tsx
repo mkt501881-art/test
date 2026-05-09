@@ -12,7 +12,7 @@ export default function Page() {
   const [updatedAt, setUpdatedAt] = useState("")
 
   useEffect(() => {
-    fetch("https://raw.githubusercontent.com/mkt501881-art/test/refs/heads/main/status.json")
+    fetch("https://raw.githubusercontent.com/mkt501881-art/status/refs/heads/main/status.json")
       .then(res => res.json())
       .then(data => {
         setData(data)
