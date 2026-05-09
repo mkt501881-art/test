@@ -82,32 +82,33 @@ export default function Page() {
   key={item.name}
   onClick={() => router.push(`/item/${item.name}`)}
 
-  onMouseDown={(e) => {
-    e.currentTarget.style.transform = "scale(0.96)"
-    e.currentTarget.style.boxShadow = "0 3px 10px rgba(0,0,0,0.2)"
-  }}
-  onMouseUp={(e) => {
-    e.currentTarget.style.transform = "scale(1)"
-    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.transform = "scale(1)"
-    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
-  }}
-  onTouchStart={(e) => {
-    e.currentTarget.style.transform = "scale(0.96)"
-  }}
-  onTouchEnd={(e) => {
-    e.currentTarget.style.transform = "scale(1)"
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.transform = "translateY(-5px)"
-    e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.transform = "translateY(0)"
-    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
-  }}
+ onMouseEnter={(e) => {
+  e.currentTarget.style.transform = "translateY(-5px) scale(1)"
+  e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
+}}
+
+onMouseLeave={(e) => {
+  e.currentTarget.style.transform = "translateY(0) scale(1)"
+  e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
+}}
+
+onMouseDown={(e) => {
+  e.currentTarget.style.transform = "translateY(-5px) scale(0.96)"
+  e.currentTarget.style.boxShadow = "0 5px 12px rgba(0,0,0,0.2)"
+}}
+
+onMouseUp={(e) => {
+  e.currentTarget.style.transform = "translateY(-5px) scale(1)"
+  e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
+}}
+
+onTouchStart={(e) => {
+  e.currentTarget.style.transform = "translateY(0) scale(0.96)"
+}}
+
+onTouchEnd={(e) => {
+  e.currentTarget.style.transform = "translateY(0) scale(1)"
+}}
   
   style={{
     cursor: "pointer",
