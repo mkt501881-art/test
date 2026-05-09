@@ -72,6 +72,7 @@ export default function Page() {
   style={{
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    justifyContent: "center",
     gap: 40,
   }}
 >
@@ -81,7 +82,9 @@ export default function Page() {
             style={{
               border: "4px solid black",
               padding: 20,
-              width: 300,
+              width: "100%",        // ← 固定widthやめる
+              maxWidth: "300px",    // ← 上限だけ決める
+              margin: "0 auto",     // ← 中央寄せ
             }}
           >
             <h2>{item.name}</h2>
