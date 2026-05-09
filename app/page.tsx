@@ -9,16 +9,22 @@ type Item = {
 
 export default function Page() {
   const [data, setData] = useState<Item[]>([])
+  const [updatedAt, setUpdatedAt] = useState("")
 
   useEffect(() => {
     fetch("https://raw.githubusercontent.com/mkt501881-art/test/refs/heads/main/status.json")
       .then(res => res.json())
-      .then(setData)
+      .then(data => {
+        setData(data)
+        setUpdatedAt(new Date().toLocaleTimeString())
+      })
   }, [])
 
   return (
     <div style={{ padding: 40 }}>
       <h1 style={{ fontSize: "40px" }}>貸し出し状況</h1>
+
+      <p>最終更新: {updatedAt}</p>
 
       <div style={{ display: "flex", gap: 40 }}>
         {data.map(item => (
