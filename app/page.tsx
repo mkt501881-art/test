@@ -11,14 +11,18 @@ export default function Page() {
   const [data, setData] = useState<Item[]>([])
   const [updatedAt, setUpdatedAt] = useState("")
 
-  useEffect(() => {
-    fetch("https://raw.githubusercontent.com/mkt501881-art/status/refs/heads/main/status.json")
-      .then(res => res.json())
-      .then(data => {
-        setData(data)
-        setUpdatedAt(new Date().toLocaleTimeString())
-      })
-  }, [])
+useEffect(() => {
+  fetch(
+    "https://raw.githubusercontent.com/あなたのユーザー名/リポジトリ名/main/status.json?t=" + Date.now(),
+    { cache: "no-store" }
+  )
+    .then(res => res.json())
+    .then(data => {
+      console.log(data) // ← 動作確認用（後で消してOK）
+      setData(data)
+      setUpdatedAt(new Date().toLocaleTimeString())
+    })
+}, [])
 
   return (
     <div style={{ padding: 40 }}>
