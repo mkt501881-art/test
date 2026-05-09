@@ -1,0 +1,10 @@
+[
+  {
+    "name": "example1",
+    "status": "available"
+  },
+  {
+    "name": "example2",
+    "status": "using"
+  }
+]
