@@ -72,7 +72,7 @@ export default function Page() {
   style={{
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
-    gap: 40,
+    gap: "40px",
   }}
 >
         {data.map(item => (
