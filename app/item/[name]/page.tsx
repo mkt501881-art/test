@@ -1,7 +1,8 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import } from "next/navigation"import { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
 
 type Item = {
   name: string
