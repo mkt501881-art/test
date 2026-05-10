@@ -81,7 +81,7 @@ export default function ItemPage() {
     }
 
     try {
-      const res = await fetch("https://あなたのRailwayのURL/request", {
+      const res = await fetch("https://test-discord-production.up.railway.app/request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
