@@ -1,8 +1,7 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
+import } from "next/navigation"import { useEffect, useState } from "react"
 
 type Item = {
   name: string
@@ -20,7 +19,6 @@ export default function ItemPage() {
   const name = params.name
 
   const [item, setItem] = useState<Item | null>(null)
-
   const [showForm, setShowForm] = useState(false)
 
   const [email, setEmail] = useState("")
@@ -28,17 +26,26 @@ export default function ItemPage() {
   const [className, setClassName] = useState("")
   const [number, setNumber] = useState("")
 
-  // ✅ メール＆名前自動入力
+  // ✅ 自動解析（ここ重要）
   useEffect(() => {
-    if (session?.user?.email) {
-      setEmail(session.user.email)
-    }
-    if (session?.user?.name) {
-      setStudentName(session.user.name)
+    if (!session?.user?.email || !session?.user?.name) return
+
+    setEmail(session.user.email)
+
+    const raw = session.user.name
+
+    // ✅ 分解ロジック
+    if (raw.length >= 5) {
+      const cls = raw[1]              // 2桁目
+      const num = raw.slice(2, 4)     // 3-4桁目
+      const realName = raw.slice(4)   // 5文字目以降
+
+      setClassName(cls)
+      setNumber(num)
+      setStudentName(realName)
     }
   }, [session])
 
-  // ✅ データ取得
   useEffect(() => {
     fetch(
       "https://raw.githubusercontent.com/mkt501881-art/status/refs/heads/main/status.json?t=" + Date.now()
@@ -64,26 +71,17 @@ export default function ItemPage() {
   }
 
   return (
-    <div style={{
-      background: "#f5f5f5",
-      minHeight: "100vh",
-      padding: 20
-    }}>
+    <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
 
       {/* 戻る */}
       <button
         onClick={() => router.push("/")}
-        style={{
-          marginBottom: 20,
-          border: "none",
-          background: "none",
-          cursor: "pointer"
-        }}
+        style={{ marginBottom: 20, border: "none", background: "none", cursor: "pointer" }}
       >
         ← ホームに戻る
       </button>
 
-      {/* メインカード */}
+      {/* カード */}
       <div style={{
         maxWidth: "500px",
         margin: "0 auto",
@@ -93,19 +91,16 @@ export default function ItemPage() {
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
       }}>
 
-        {/* タイトル */}
         <h1>{item.name}</h1>
 
-        {/* ステータス */}
+        {/* 状態 */}
         <span style={{
           padding: "6px 12px",
           borderRadius: "999px",
           fontSize: "13px",
           fontWeight: "bold",
-          background:
-            isAvailable ? "#e6f9ed" : "#fdeaea",
-          color:
-            isAvailable ? "#0a8f3d" : "#c80000"
+          background: isAvailable ? "#e6f9ed" : "#fdeaea",
+          color: isAvailable ? "#0a8f3d" : "#c80000"
         }}>
           {isAvailable ? "貸出可" : "貸出中"}
         </span>
@@ -119,7 +114,7 @@ export default function ItemPage() {
           color: "#fff",
           fontSize: "12px"
         }}>
-          {item.genre || "不明"}
+          {item.genre}
         </span>
 
         {/* 情報 */}
@@ -142,69 +137,38 @@ export default function ItemPage() {
             borderRadius: "10px",
             border: "none",
             background: isAvailable ? "#007bff" : "#ccc",
-            color: "#fff",
-            cursor: isAvailable ? "pointer" : "not-allowed"
+            color: "#fff"
           }}
         >
           {isAvailable ? "📦 貸し出し申請" : "貸し出し中"}
         </button>
 
-        {/* ✅ フォーム */}
+        {/* ✅ 確認UI */}
         {showForm && (
           <div style={{ marginTop: 20 }}>
 
-            {/* メール */}
-            <p style={{ color: "#888", fontSize: "13px" }}>
-              メールアドレス
+            <p style={{ fontWeight: "bold", marginBottom: 10 }}>
+              こちらの情報で間違いありませんか？
             </p>
-            <p style={{
+
+            <div style={{
               background: "#eee",
-              padding: "8px",
-              borderRadius: "6px",
-              marginBottom: 10
+              padding: 12,
+              borderRadius: 8,
+              fontSize: 14
             }}>
-              {email}
-            </p>
+              <p>メール: {email}</p>
+              <p>名前: {studentName}</p>
+              <p>組: {className}</p>
+              <p>出席番号: {number}</p>
+            </div>
 
-            {/* 名前 */}
-            <p style={{ color: "#888", fontSize: "13px" }}>
-              名前
-            </p>
-            <p style={{
-              background: "#eee",
-              padding: "8px",
-              borderRadius: "6px",
-              marginBottom: 10
-            }}>
-              {studentName}
-            </p>
-
-            {/* 組 */}
-            <input
-              value={className}
-              onChange={(e) => setClassName(e.target.value)}
-              placeholder="組"
-              style={{ width: "100%", padding: 8, marginBottom: 10 }}
-            />
-
-            {/* 番号 */}
-            <input
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-              placeholder="出席番号"
-              style={{ width: "100%", padding: 8, marginBottom: 10 }}
-            />
-
-            {/* 送信 */}
             <button
-              disabled={!className || !number}
               onClick={async () => {
                 try {
                   await fetch("https://test-discord-production.up.railway.app/request", {
                     method: "POST",
-                    headers: {
-                      "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                       name: item.name,
                       user: email,
@@ -224,22 +188,16 @@ export default function ItemPage() {
                 }
               }}
               style={{
+                marginTop: 15,
                 width: "100%",
                 padding: "10px",
                 borderRadius: "8px",
                 border: "none",
-                background:
-                  (!className || !number)
-                    ? "#ccc"
-                    : "#28a745",
-                color: "#fff",
-                cursor:
-                  (!className || !number)
-                    ? "not-allowed"
-                    : "pointer"
+                background: "#28a745",
+                color: "#fff"
               }}
             >
-              申請
+              申請する
             </button>
 
           </div>
