@@ -22,6 +22,9 @@ export default function Page() {
   const [updatedAt, setUpdatedAt] = useState("")
   const [menuOpen, setMenuOpen] = useState(false)
 
+  // ✅ 追加：検索
+  const [search, setSearch] = useState("")
+
   useEffect(() => {
     fetch(
       "https://raw.githubusercontent.com/mkt501881-art/status/refs/heads/main/status.json?t=" + Date.now(),
@@ -34,8 +37,14 @@ export default function Page() {
       })
   }, [])
 
+  // ✅ 検索フィルタ
+  const filtered = data.filter(item =>
+    item.name.toLowerCase().includes(search.toLowerCase()) ||
+    item.genre.includes(search)
+  )
+
   // ✅ グループ分け
-  const grouped = data.reduce((acc: Record<string, Item[]>, item) => {
+  const grouped = filtered.reduce((acc: Record<string, Item[]>, item) => {
     if (!acc[item.genre]) acc[item.genre] = []
     acc[item.genre].push(item)
     return acc
@@ -47,10 +56,7 @@ export default function Page() {
   const scrollToGenre = (genre: string) => {
     const el = document.getElementById(`genre-${genre}`)
     if (el) {
-      el.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      })
+      el.scrollIntoView({ behavior: "smooth", block: "start" })
     }
     setMenuOpen(false)
   }
@@ -58,7 +64,7 @@ export default function Page() {
   return (
     <div style={{ padding: 20, background: "#f5f5f5", minHeight: "100vh" }}>
 
-      {/* ✅ ハンバーガー */}
+      {/* ハンバーガー */}
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         onMouseDown={(e) => e.preventDefault()}
@@ -80,29 +86,23 @@ export default function Page() {
         }}
       >
         <span style={{
-          height: 2,
-          background: "black",
-          width: "24px",
+          height: 2, background: "black", width: "24px",
           transition: "0.3s",
           transform: menuOpen ? "rotate(45deg) translate(5px,5px)" : "none"
         }} />
         <span style={{
-          height: 2,
-          background: "black",
-          width: "24px",
+          height: 2, background: "black", width: "24px",
           transition: "0.3s",
           opacity: menuOpen ? 0 : 1
         }} />
         <span style={{
-          height: 2,
-          background: "black",
-          width: "24px",
+          height: 2, background: "black", width: "24px",
           transition: "0.3s",
           transform: menuOpen ? "rotate(-45deg) translate(5px,-5px)" : "none"
         }} />
       </button>
 
-      {/* ✅ 背景 */}
+      {/* 背景 */}
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
@@ -118,7 +118,7 @@ export default function Page() {
         />
       )}
 
-      {/* ✅ メニュー */}
+      {/* メニュー */}
       <div style={{
         position: "fixed",
         top: 0,
@@ -131,7 +131,7 @@ export default function Page() {
         paddingTop: 60,
         zIndex: 1000,
         transform: menuOpen ? "translateX(0)" : "translateX(-100%)",
-        transition: "transform 0.3s ease"
+        transition: "0.3s"
       }}>
         <p style={{ fontSize: "13px" }}>ログイン中</p>
         <p><b>{session?.user?.email}</b></p>
@@ -165,51 +165,46 @@ export default function Page() {
 
         <hr style={{ margin: "20px 0" }} />
 
-        {/* ✅ ジャンル一覧 */}
         <p style={{ fontSize: "13px", color: "#888" }}>ジャンル</p>
 
         {genreOrder.map(g => (
-          <p
-            key={g}
+          <p key={g}
             onClick={() => scrollToGenre(g)}
-            style={{
-              cursor: "pointer",
-              padding: "6px 8px",
-              borderRadius: "6px"
-            }}
-          >
+            style={{ cursor: "pointer", padding: "6px 8px" }}>
             {g}
           </p>
         ))}
       </div>
 
-      {/* ✅ タイトル */}
+      {/* タイトル */}
       <h1 style={{ fontSize: "28px" }}>貸し出し状況</h1>
       <p style={{ color: "#555" }}>最終更新: {updatedAt}</p>
 
-      <button
-        onClick={() => location.reload()}
+      {/* ✅ 検索バー */}
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="タイトル・ジャンルで検索"
         style={{
+          width: "100%",
+          padding: "10px",
           marginTop: 10,
           marginBottom: 20,
-          padding: "8px 14px",
-          border: "none",
-          background: "#007bff",
-          color: "#fff",
           borderRadius: "8px",
-          cursor: "pointer"
+          border: "1px solid #ccc"
         }}
-      >
-        更新
-      </button>
+      />
+
+      {/* ✅ データなし */}
+      {filtered.length === 0 && (
+        <p style={{ color: "#888" }}>
+          見つかりませんでした
+        </p>
+      )}
 
       {/* ✅ ジャンルごと表示 */}
       {sortedGenres.map((genre) => (
-        <div
-          key={genre}
-          id={`genre-${genre}`}
-          style={{ marginBottom: 30 }}
-        >
+        <div key={genre} id={`genre-${genre}`} style={{ marginBottom: 30 }}>
           <h2 style={{
             marginBottom: 10,
             fontSize: "18px",
@@ -255,7 +250,6 @@ export default function Page() {
           </div>
         </div>
       ))}
-
     </div>
   )
 }
