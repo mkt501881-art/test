@@ -70,6 +70,49 @@ export default function ItemPage() {
             : "貸し出し中"}
         </span>
       </p>
+
+      <button
+  onClick={async () => {
+    if (!session?.user?.email) {
+      alert("ログインしてください")
+      return
+    }
+
+    try {
+      const res = await fetch("https://あなたのRailwayのURL/request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: item.name,
+          user: session.user.email
+        })
+      })
+
+      if (!res.ok) {
+        throw new Error("送信失敗")
+      }
+
+      alert("✅ 申請を送信しました")
+
+    } catch (err) {
+      console.error(err)
+      alert("❌ 送信に失敗")
+    }
+  }}
+
+  style={{
+    marginTop: 20,
+    padding: "10px 20px",
+    border: "2px solid black",
+    cursor: "pointer",
+    borderRadius: "8px"
+  }}
+>
+  📦 貸し出し申請
+</button>
+
     </div>
   )
 }
