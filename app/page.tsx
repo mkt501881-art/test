@@ -57,7 +57,6 @@ export default function Page() {
     cursor: "pointer",
     padding: 0,
     outline: "none",
-    position: "relative",
     zIndex: 1100
   }}
 >
