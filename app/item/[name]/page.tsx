@@ -22,18 +22,23 @@ export default function ItemPage() {
   const [item, setItem] = useState<Item | null>(null)
 
   const [showForm, setShowForm] = useState(false)
+
   const [email, setEmail] = useState("")
+  const [studentName, setStudentName] = useState("")
   const [className, setClassName] = useState("")
   const [number, setNumber] = useState("")
-  const [studentName, setStudentName] = useState("")
 
-  // ✅ メール自動セット
+  // ✅ メール＆名前自動入力
   useEffect(() => {
     if (session?.user?.email) {
       setEmail(session.user.email)
     }
+    if (session?.user?.name) {
+      setStudentName(session.user.name)
+    }
   }, [session])
 
+  // ✅ データ取得
   useEffect(() => {
     fetch(
       "https://raw.githubusercontent.com/mkt501881-art/status/refs/heads/main/status.json?t=" + Date.now()
@@ -126,7 +131,7 @@ export default function ItemPage() {
           <p>{item.owner || "不明"}</p>
         </div>
 
-        {/* トグルボタン */}
+        {/* ボタン */}
         <button
           disabled={!isAvailable}
           onClick={() => setShowForm(!showForm)}
@@ -148,17 +153,30 @@ export default function ItemPage() {
         {showForm && (
           <div style={{ marginTop: 20 }}>
 
-            {/* メール（固定） */}
+            {/* メール */}
             <p style={{ color: "#888", fontSize: "13px" }}>
               メールアドレス
             </p>
             <p style={{
-              padding: "8px",
               background: "#eee",
+              padding: "8px",
               borderRadius: "6px",
               marginBottom: 10
             }}>
               {email}
+            </p>
+
+            {/* 名前 */}
+            <p style={{ color: "#888", fontSize: "13px" }}>
+              名前
+            </p>
+            <p style={{
+              background: "#eee",
+              padding: "8px",
+              borderRadius: "6px",
+              marginBottom: 10
+            }}>
+              {studentName}
             </p>
 
             {/* 組 */}
@@ -177,17 +195,9 @@ export default function ItemPage() {
               style={{ width: "100%", padding: 8, marginBottom: 10 }}
             />
 
-            {/* 名前 */}
-            <input
-              value={studentName}
-              onChange={(e) => setStudentName(e.target.value)}
-              placeholder="名前"
-              style={{ width: "100%", padding: 8, marginBottom: 10 }}
-            />
-
             {/* 送信 */}
             <button
-              disabled={!className || !number || !studentName}
+              disabled={!className || !number}
               onClick={async () => {
                 try {
                   await fetch("https://test-discord-production.up.railway.app/request", {
@@ -219,12 +229,12 @@ export default function ItemPage() {
                 borderRadius: "8px",
                 border: "none",
                 background:
-                  (!className || !number || !studentName)
+                  (!className || !number)
                     ? "#ccc"
                     : "#28a745",
                 color: "#fff",
                 cursor:
-                  (!className || !number || !studentName)
+                  (!className || !number)
                     ? "not-allowed"
                     : "pointer"
               }}
