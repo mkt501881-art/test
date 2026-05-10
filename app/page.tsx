@@ -9,19 +9,10 @@ import { signOut, useSession } from "next-auth/react"
 type Item = {
   name: string
   status: "available" | "using"
-  genre: string   // ✅ 追加
+  genre: string
 }
 
-// ✅ ジャンル順
 const genreOrder = ["マンガ", "ライトノベル", "小説", "その他"]
-
-// ✅ ジャンルカラー
-const genreColor: Record<string, string> = {
-  マンガ: "#ff9800",
-  ライトノベル: "#9c27b0",
-  小説: "#2196f3",
-  その他: "#607d8b"
-}
 
 export default function Page() {
   const { data: session } = useSession()
@@ -50,8 +41,19 @@ export default function Page() {
     return acc
   }, {})
 
-  // ✅ 順番固定
   const sortedGenres = genreOrder.filter(g => grouped[g])
+
+  // ✅ スクロール
+  const scrollToGenre = (genre: string) => {
+    const el = document.getElementById(`genre-${genre}`)
+    if (el) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      })
+    }
+    setMenuOpen(false)
+  }
 
   return (
     <div style={{ padding: 20, background: "#f5f5f5", minHeight: "100vh" }}>
@@ -100,7 +102,7 @@ export default function Page() {
         }} />
       </button>
 
-      {/* 背景 */}
+      {/* ✅ 背景 */}
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
@@ -116,7 +118,7 @@ export default function Page() {
         />
       )}
 
-      {/* メニュー */}
+      {/* ✅ メニュー */}
       <div style={{
         position: "fixed",
         top: 0,
@@ -158,11 +160,30 @@ export default function Page() {
           }}
           style={{ cursor: "pointer", fontWeight: "bold" }}
         >
-          ホーム
+          🏠 ホーム
         </p>
+
+        <hr style={{ margin: "20px 0" }} />
+
+        {/* ✅ ジャンル一覧 */}
+        <p style={{ fontSize: "13px", color: "#888" }}>ジャンル</p>
+
+        {genreOrder.map(g => (
+          <p
+            key={g}
+            onClick={() => scrollToGenre(g)}
+            style={{
+              cursor: "pointer",
+              padding: "6px 8px",
+              borderRadius: "6px"
+            }}
+          >
+            {g}
+          </p>
+        ))}
       </div>
 
-      {/* タイトル */}
+      {/* ✅ タイトル */}
       <h1 style={{ fontSize: "28px" }}>貸し出し状況</h1>
       <p style={{ color: "#555" }}>最終更新: {updatedAt}</p>
 
@@ -184,13 +205,15 @@ export default function Page() {
 
       {/* ✅ ジャンルごと表示 */}
       {sortedGenres.map((genre) => (
-        <div key={genre} style={{ marginBottom: 30 }}>
-
-          {/* ジャンルタイトル */}
+        <div
+          key={genre}
+          id={`genre-${genre}`}
+          style={{ marginBottom: 30 }}
+        >
           <h2 style={{
             marginBottom: 10,
             fontSize: "18px",
-            borderLeft: `4px solid ${genreColor[genre]}`,
+            borderLeft: "4px solid #007bff",
             paddingLeft: 8
           }}>
             {genre}
