@@ -151,17 +151,17 @@ useEffect(() => {
               こちらの情報で間違いありませんか？
             </p>
 
-            <div style={{
-              background: "#eee",
-              padding: 12,
-              borderRadius: 8,
-              fontSize: 14
-            }}>
-              <p>メール: {email}</p>
-              <p>名前: {studentName}</p>
-              <p>組: {className}</p>
-              <p>出席番号: {number}</p>
-            </div>
+<div style={{
+  background: "#eee",
+  padding: 12,
+  borderRadius: 8,
+  fontSize: 14
+}}>
+  <p>メール: {email}</p>
+  <p>名前: {studentName}</p>
+  <p>所属: {className}</p>   {/* ← ここ変更 */}
+  <p>出席番号: {number}</p>
+</div>
 
             <button
               onClick={async () => {
