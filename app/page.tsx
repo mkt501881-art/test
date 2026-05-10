@@ -39,6 +39,10 @@ export default function Page() {
         onClick={() => setMenuOpen(!menuOpen)}
         onMouseDown={(e) => e.preventDefault()}
         style={{
+          position: "fixed",   // ← もう一回これに戻す✅
+          top: 86,
+          left: 72,
+
           marginBottom: 10,
           width: 40,
           height: 30,
