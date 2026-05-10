@@ -29,73 +29,55 @@ export default function Page() {
         setData(data)
         setUpdatedAt(new Date().toLocaleTimeString())
       })
-      .catch(err => {
-        console.error("読み込みエラー:", err)
-      })
   }, [])
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, background: "#f5f5f5", minHeight: "100vh" }}>
 
-      {/* ✅ ハンバーガーボタン */}
-<button
-  onClick={() => setMenuOpen(!menuOpen)}   // ← toggleに変更
-  onMouseDown={(e) => e.preventDefault()}
-  style={{
-    width: 40,
-    height: 30,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",   // ← 間隔調整用
-    gap: "5px",                  // ← 間隔を小さく（ここ調整ポイント）
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    padding: 0,
-    outline: "none",
-    position: "relative",
-    zIndex: 1100
-  }}
->
-  {/* 上線 */}
-  <span
-    style={{
-      height: 3,
-      background: "black",
-      width: "28px",
-      transition: "0.3s",
-      transform: menuOpen
-        ? "rotate(45deg) translate(6px, 6px)"
-        : "none"
-    }}
-  />
+      {/* ✅ ハンバーガー */}
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        onMouseDown={(e) => e.preventDefault()}
+        style={{
+          marginBottom: 10,
+          width: 40,
+          height: 30,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: "5px",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+          outline: "none",
+          zIndex: 1100
+        }}
+      >
+        <span style={{
+          height: 2,
+          background: "black",
+          width: "24px",
+          transition: "0.3s",
+          transform: menuOpen ? "rotate(45deg) translate(5px,5px)" : "none"
+        }} />
+        <span style={{
+          height: 2,
+          background: "black",
+          width: "24px",
+          transition: "0.3s",
+          opacity: menuOpen ? 0 : 1
+        }} />
+        <span style={{
+          height: 2,
+          background: "black",
+          width: "24px",
+          transition: "0.3s",
+          transform: menuOpen ? "rotate(-45deg) translate(5px,-5px)" : "none"
+        }} />
+      </button>
 
-  {/* 中央線 */}
-  <span
-    style={{
-      height: 3,
-      background: "black",
-      width: "28px",
-      transition: "0.3s",
-      opacity: menuOpen ? 0 : 1   // ← 消える
-    }}
-  />
-
-  {/* 下線 */}
-  <span
-    style={{
-      height: 3,
-      background: "black",
-      width: "28px",
-      transition: "0.3s",
-      transform: menuOpen
-        ? "rotate(-45deg) translate(5px, -5px)"
-        : "none"
-    }}
-  />
-</button>
-      
-      {/* ✅ 背景（クリックで閉じる） */}
+      {/* ✅ 背景 */}
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
@@ -111,168 +93,109 @@ export default function Page() {
         />
       )}
 
-      {/* ✅ サイドメニュー */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "250px",
-          height: "100%",
-          background: "#fff",
-          boxShadow: "2px 0 10px rgba(0,0,0,0.2)",
-          padding: 20,
-          zIndex: 1000,
-          paddingTop: 60,  // ← 追加 ✅
+      {/* ✅ メニュー */}
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "250px",
+        height: "100%",
+        background: "#fff",
+        boxShadow: "2px 0 10px rgba(0,0,0,0.2)",
+        padding: 20,
+        paddingTop: 60,
+        zIndex: 1000,
+        transform: menuOpen ? "translateX(0)" : "translateX(-100%)",
+        transition: "transform 0.3s ease"
+      }}>
+        <p style={{ fontSize: "13px" }}>ログイン中</p>
+        <p><b>{session?.user?.email}</b></p>
 
-          transform: menuOpen ? "translateX(0)" : "translateX(-100%)",
-          transition: "transform 0.3s ease"
-        }}
-      >
-        
-        {/* ✅ ユーザー情報 */}
-        <p style={{ marginTop: 20, fontSize: "14px" }}>
-          ログイン中：
-        </p>
-        <p>
-          <b>{session?.user?.email}</b>
-        </p>
-
-        {/* ✅ ログアウト */}
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
           style={{
             marginTop: 10,
             padding: "6px 12px",
-            border: "1px solid black",
-            cursor: "pointer",
-            color: "red"
+            border: "none",
+            background: "#ffecec",
+            color: "#cc0000",
+            borderRadius: "6px",
+            cursor: "pointer"
           }}
         >
           ログアウト
         </button>
 
-        {/* ✅ 区切り */}
         <hr style={{ margin: "20px 0" }} />
 
-        {/* ✅ ホーム */}
         <p
           onClick={() => {
             router.push("/")
             setMenuOpen(false)
           }}
-          style={{
-            cursor: "pointer"
-          }}
+          style={{ cursor: "pointer", fontWeight: "bold" }}
         >
           🏠 ホーム
         </p>
       </div>
 
       {/* ✅ タイトル */}
-      <h1 style={{ fontSize: "32px", marginTop: 10 }}>
-        貸し出し状況
-      </h1>
+      <h1 style={{ fontSize: "28px" }}>貸し出し状況</h1>
 
-      <p>最終更新: {updatedAt}</p>
+      <p style={{ color: "#555" }}>最終更新: {updatedAt}</p>
 
       <button
         onClick={() => location.reload()}
         style={{
+          marginTop: 10,
           marginBottom: 20,
-          padding: "8px 16px",
-          border: "2px solid black",
+          padding: "8px 14px",
+          border: "none",
+          background: "#007bff",
+          color: "#fff",
+          borderRadius: "8px",
           cursor: "pointer"
         }}
       >
         更新
       </button>
 
-      {/* ✅ カード一覧 */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
-          gap: "20px",
-        }}
-      >
+      {/* ✅ カード */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
+        gap: 20
+      }}>
         {data.map(item => (
           <div
             key={item.name}
             onClick={() => router.push(`/item/${item.name}`)}
-
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-5px) scale(1)"
-              e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
-            }}
-
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0) scale(1)"
-              e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)"
-            }}
-
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = "translateY(-5px) scale(0.96)"
-              e.currentTarget.style.boxShadow = "0 5px 12px rgba(0,0,0,0.2)"
-            }}
-
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = "translateY(-5px) scale(1)"
-              e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.2)"
-            }}
-
-            onTouchStart={(e) => {
-              e.currentTarget.style.transform = "translateY(0) scale(0.96)"
-            }}
-
-            onTouchEnd={(e) => {
-              e.currentTarget.style.transform = "translateY(0) scale(1)"
-            }}
-
             style={{
-              cursor: "pointer",
-              border: "2px solid black",
               padding: 20,
-              borderRadius: "12px",
-              boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+              borderRadius: "16px",
               background: "#fff",
-              transition: "transform 0.1s ease, box-shadow 0.1s ease",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              cursor: "pointer"
             }}
           >
-            <h2>{item.name}</h2>
+            <h2 style={{ marginBottom: 10 }}>{item.name}</h2>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div
-                style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: "50%",
-                  background:
-                    item.status === "available" ? "green" : "red",
-                }}
-              />
-
-              <span
-                style={{
-                  fontWeight: "bold",
-                  color:
-                    item.status === "available" ? "green" : "red",
-                }}
-              >
-                {item.status === "available"
-                  ? "貸し出し可能"
-                  : "貸し出し中"}
-              </span>
-            </div>
+            <span style={{
+              padding: "6px 12px",
+              borderRadius: "999px",
+              fontSize: "13px",
+              fontWeight: "bold",
+              background:
+                item.status === "available" ? "#e6f9ed" : "#fdeaea",
+              color:
+                item.status === "available" ? "#0a8f3d" : "#c80000"
+            }}>
+              {item.status === "available" ? "貸出可" : "貸出中"}
+            </span>
           </div>
         ))}
       </div>
 
-      {data.length === 0 && (
-        <p style={{ marginTop: 20 }}>
-          データが読み込めていません
-        </p>
-      )}
     </div>
   )
 }
