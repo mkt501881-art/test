@@ -23,7 +23,6 @@ export default function AdminPage() {
   const [newName, setNewName] = useState("")
   const [newGenre, setNewGenre] = useState("マンガ")
 
-  // ✅ 編集状態
   const [editingName, setEditingName] = useState<string | null>(null)
 
   const [editName, setEditName] = useState("")
@@ -31,21 +30,14 @@ export default function AdminPage() {
   const [editLocation, setEditLocation] = useState("")
   const [editOwner, setEditOwner] = useState("")
 
-  // ✅ アクセス制御
   useEffect(() => {
     if (status === "loading") return
 
-    if (!session?.user?.email) {
-      router.push("/")
-      return
-    }
-
-    if (!ADMIN_EMAILS.includes(session.user.email)) {
+    if (!session?.user?.email || !ADMIN_EMAILS.includes(session.user.email)) {
       router.push("/")
     }
   }, [session, status])
 
-  // ✅ データ取得
   useEffect(() => {
     fetch("/api/data")
       .then(res => res.json())
@@ -55,55 +47,65 @@ export default function AdminPage() {
       })
   }, [])
 
-  // ✅ 追加
   const addItem = async () => {
     if (!newName) return
-
     await fetch("/api/add", {
       method: "POST",
-      body: JSON.stringify({
-        name: newName,
-        genre: newGenre
-      })
+      body: JSON.stringify({ name: newName, genre: newGenre })
     })
-
     location.reload()
   }
 
-  // ✅ 削除
   const deleteItem = async (name: string) => {
     await fetch("/api/delete", {
       method: "POST",
       body: JSON.stringify({ name })
     })
-
     location.reload()
   }
 
-  if (loading) {
-    return <p style={{ padding: 40 }}>読み込み中...</p>
-  }
+  if (loading) return <p style={{ padding: 40 }}>読み込み中...</p>
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{
+      padding: 20,
+      background: "#f5f5f5",
+      minHeight: "100vh"
+    }}>
 
       <h1>⚙ 管理画面</h1>
+      <p style={{ color: "#666" }}>ログイン: {session?.user?.email}</p>
 
-      <p>ログイン: {session?.user?.email}</p>
-
-      {/* ✅ 追加 */}
-      <div style={{ marginTop: 20 }}>
-        <h2>本の追加</h2>
+      {/* ✅ 追加カード */}
+      <div style={{
+        background: "#fff",
+        padding: 20,
+        borderRadius: 12,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        marginTop: 20
+      }}>
+        <h2>📚 本の追加</h2>
 
         <input
           placeholder="本の名前"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
+          style={{
+            padding: 8,
+            marginRight: 10,
+            borderRadius: 6,
+            border: "1px solid #ccc"
+          }}
         />
 
         <select
           value={newGenre}
           onChange={(e) => setNewGenre(e.target.value)}
+          style={{
+            padding: 8,
+            marginRight: 10,
+            borderRadius: 6
+          }}
         >
           <option>マンガ</option>
           <option>ライトノベル</option>
@@ -111,33 +113,44 @@ export default function AdminPage() {
           <option>その他</option>
         </select>
 
-        <button onClick={addItem}>追加</button>
+        <button
+          onClick={addItem}
+          style={{
+            padding: "8px 14px",
+            background: "#007bff",
+            color: "#fff",
+            border: "none",
+            borderRadius: 6,
+            cursor: "pointer"
+          }}
+        >
+          追加
+        </button>
       </div>
 
-      {/* ✅ 一覧 */}
-      <div style={{ marginTop: 30 }}>
-        <h2>本一覧</h2>
+      {/* ✅ 一覧カード */}
+      <div style={{
+        background: "#fff",
+        padding: 20,
+        borderRadius: 12,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        marginTop: 20
+      }}>
+        <h2>📖 本一覧</h2>
 
         {data.map(item => (
-
           <div key={item.name} style={{
-            marginBottom: 10,
-            padding: 10,
-            border: "1px solid #ccc"
+            marginBottom: 15,
+            padding: 15,
+            borderRadius: 10,
+            background: "#f9f9f9"
           }}>
 
-            {/* ✅ 編集モード */}
             {editingName === item.name ? (
               <>
-                <input
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                />
+                <input value={editName} onChange={e => setEditName(e.target.value)} />
 
-                <select
-                  value={editGenre}
-                  onChange={(e) => setEditGenre(e.target.value)}
-                >
+                <select value={editGenre} onChange={e => setEditGenre(e.target.value)}>
                   <option>マンガ</option>
                   <option>ライトノベル</option>
                   <option>小説</option>
@@ -147,16 +160,17 @@ export default function AdminPage() {
                 <input
                   placeholder="保管場所"
                   value={editLocation}
-                  onChange={(e) => setEditLocation(e.target.value)}
+                  onChange={e => setEditLocation(e.target.value)}
                 />
 
                 <input
                   placeholder="出品者"
                   value={editOwner}
-                  onChange={(e) => setEditOwner(e.target.value)}
+                  onChange={e => setEditOwner(e.target.value)}
                 />
 
                 <button
+                  style={{ background: "#28a745", color: "#fff", marginLeft: 5 }}
                   onClick={async () => {
                     await fetch("/api/update", {
                       method: "POST",
@@ -168,7 +182,6 @@ export default function AdminPage() {
                         owner: editOwner
                       })
                     })
-
                     location.reload()
                   }}
                 >
@@ -179,25 +192,33 @@ export default function AdminPage() {
                   キャンセル
                 </button>
               </>
-
             ) : (
-
               <>
-                {item.name}（{item.genre}）
+                <b>{item.name}</b>（{item.genre}）
 
-                <button onClick={() => {
-                  setEditingName(item.name)
-                  setEditName(item.name)
-                  setEditGenre(item.genre)
-                  setEditLocation(item.location || "")
-                  setEditOwner(item.owner || "")
-                }}>
+                <button
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    setEditingName(item.name)
+                    setEditName(item.name)
+                    setEditGenre(item.genre)
+                    setEditLocation(item.location || "")
+                    setEditOwner(item.owner || "")
+                  }}
+                >
                   編集
                 </button>
 
                 <button
                   onClick={() => deleteItem(item.name)}
-                  style={{ marginLeft: 10, color: "red" }}
+                  style={{
+                    marginLeft: 10,
+                    color: "white",
+                    background: "red",
+                    border: "none",
+                    borderRadius: 4,
+                    padding: "2px 8px"
+                  }}
                 >
                   削除
                 </button>
@@ -205,10 +226,10 @@ export default function AdminPage() {
             )}
 
           </div>
-
         ))}
       </div>
 
     </div>
   )
 }
+``
