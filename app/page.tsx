@@ -41,7 +41,7 @@ export default function Page() {
         style={{
           position: "fixed",   // ← もう一回これに戻す✅
           top: 15,
-          left: 25,
+          left: 30,
 
           marginBottom: 10,
           width: 40,
@@ -139,7 +139,7 @@ export default function Page() {
           }}
           style={{ cursor: "pointer", fontWeight: "bold" }}
         >
-          🏠 ホーム
+            ホーム
         </p>
       </div>
 
