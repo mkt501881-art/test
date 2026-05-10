@@ -36,6 +36,8 @@ export default function ItemPage() {
     return <p style={{ padding: 40 }}>読み込み中...</p>
   }
 
+  const isAvailable = item.status === "available"
+  
   return (
     <div style={{ padding: 40 }}>
       
@@ -73,51 +75,56 @@ export default function ItemPage() {
         </span>
       </p>
 
-      <button
-onClick={async () => {
-  if (!session?.user?.email) {
-    alert("ログインしてください")
-    return
-  }
+<button
+  disabled={!isAvailable}   // ← ここ重要
 
-  try {
-    const res = await fetch("https://test-discord-production.up.railway.app/request", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name: item.name,
-        user: session.user.email
-      })
-    })
-
-    console.log("レスポンス:", res.status)   // ← 追加
-
-    if (!res.ok) {
-      throw new Error("HTTPエラー: " + res.status)
+  onClick={async () => {
+    if (!session?.user?.email) {
+      alert("ログインしてください")
+      return
     }
 
-    alert("✅ 成功")
+    if (!isAvailable) {
+      alert("現在貸し出し中です")
+      return
+    }
 
-  } catch (err: any) {
-    console.error(err)
-    alert("❌ " + err.message)  // ← ここで原因出す
-  }
-}}
+    try {
+      const res = await fetch("https://test-discord-production.up.railway.app/request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: item.name,
+          user: session.user.email,
+          location: item.location,
+          owner: item.owner
+        })
+      })
+
+      if (!res.ok) {
+        throw new Error("送信失敗")
+      }
+
+      alert("✅ 申請を送信しました")
+
+    } catch (err) {
+      console.error(err)
+      alert("❌ 送信に失敗")
+    }
+  }}
 
   style={{
     marginTop: 20,
     padding: "10px 20px",
     border: "2px solid black",
-    cursor: "pointer",
-    borderRadius: "8px"
+    borderRadius: "8px",
+
+    cursor: isAvailable ? "pointer" : "not-allowed", // ← 見た目
+    background: isAvailable ? "#fff" : "#ccc"
   }}
 >
-  📦 貸し出し申請
+  {isAvailable ? "📦 貸し出し申請" : "❌ 貸し出し中"}
 </button>
-
-    </div>
-  )
-}
 ``
