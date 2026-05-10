@@ -74,35 +74,37 @@ export default function ItemPage() {
       </p>
 
       <button
-  onClick={async () => {
-    if (!session?.user?.email) {
-      alert("ログインしてください")
-      return
-    }
+onClick={async () => {
+  if (!session?.user?.email) {
+    alert("ログインしてください")
+    return
+  }
 
-    try {
-      const res = await fetch("https://test-discord-production.up.railway.app/request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: item.name,
-          user: session.user.email
-        })
+  try {
+    const res = await fetch("https://test-discord-production.up.railway.app/request", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: item.name,
+        user: session.user.email
       })
+    })
 
-      if (!res.ok) {
-        throw new Error("送信失敗")
-      }
+    console.log("レスポンス:", res.status)   // ← 追加
 
-      alert("✅ 申請を送信しました")
-
-    } catch (err) {
-      console.error(err)
-      alert("❌ 送信に失敗")
+    if (!res.ok) {
+      throw new Error("HTTPエラー: " + res.status)
     }
-  }}
+
+    alert("✅ 成功")
+
+  } catch (err: any) {
+    console.error(err)
+    alert("❌ " + err.message)  // ← ここで原因出す
+  }
+}}
 
   style={{
     marginTop: 20,
