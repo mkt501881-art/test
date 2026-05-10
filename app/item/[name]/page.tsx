@@ -1,5 +1,6 @@
 "use client"
 
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
@@ -12,6 +13,7 @@ type Item = {
 }
 
 export default function ItemPage() {
+  const { data: session } = useSession()
   const params = useParams()
   const name = params.name
   const router = useRouter()
