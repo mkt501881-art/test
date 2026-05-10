@@ -38,27 +38,62 @@ export default function Page() {
     <div style={{ padding: 20 }}>
 
       {/* ✅ ハンバーガーボタン */}
-      <button
-        onClick={() => setMenuOpen(true)}
-        onMouseDown={(e) => e.preventDefault()}
-        style={{
-          width: 40,
-          height: 30,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: 0,
-          outline: "none"
-        }}
-      >
-        <span style={{ height: 3, background: "black", width: "28px" }} />
-        <span style={{ height: 3, background: "black", width: "28px" }} />
-        <span style={{ height: 3, background: "black", width: "28px" }} />
-      </button>
+<button
+  onClick={() => setMenuOpen(!menuOpen)}   // ← toggleに変更
+  onMouseDown={(e) => e.preventDefault()}
+  style={{
+    width: 40,
+    height: 30,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",   // ← 間隔調整用
+    gap: "5px",                  // ← 間隔を小さく（ここ調整ポイント）
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    padding: 0,
+    outline: "none",
+    position: "relative"
+  }}
+>
+  {/* 上線 */}
+  <span
+    style={{
+      height: 3,
+      background: "black",
+      width: "28px",
+      transition: "0.3s",
+      transform: menuOpen
+        ? "rotate(45deg) translate(6px, 6px)"
+        : "none"
+    }}
+  />
 
+  {/* 中央線 */}
+  <span
+    style={{
+      height: 3,
+      background: "black",
+      width: "28px",
+      transition: "0.3s",
+      opacity: menuOpen ? 0 : 1   // ← 消える
+    }}
+  />
+
+  {/* 下線 */}
+  <span
+    style={{
+      height: 3,
+      background: "black",
+      width: "28px",
+      transition: "0.3s",
+      transform: menuOpen
+        ? "rotate(-45deg) translate(7px, -7px)"
+        : "none"
+    }}
+  />
+</button>
+      
       {/* ✅ 背景（クリックで閉じる） */}
       {menuOpen && (
         <div
