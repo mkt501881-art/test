@@ -65,7 +65,7 @@ export default function Page() {
       width: "28px",
       transition: "0.3s",
       transform: menuOpen
-        ? "rotate(45deg) translate(6px, 6px)"
+        ? "rotate(45deg) translate(5px, 5px)"
         : "none"
     }}
   />
@@ -89,7 +89,7 @@ export default function Page() {
       width: "28px",
       transition: "0.3s",
       transform: menuOpen
-        ? "rotate(-45deg) translate(7px, -7px)"
+        ? "rotate(-45deg) translate(5px, -5px)"
         : "none"
     }}
   />
