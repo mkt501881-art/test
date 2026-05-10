@@ -128,19 +128,7 @@ export default function Page() {
           transition: "transform 0.3s ease"
         }}
       >
-        {/* 閉じる */}
-        <button
-          onClick={() => setMenuOpen(false)}
-          style={{
-            fontSize: "20px",
-            background: "none",
-            border: "none",
-            cursor: "pointer"
-          }}
-        >
-          ✕
-        </button>
-
+        
         {/* ✅ ユーザー情報 */}
         <p style={{ marginTop: 20, fontSize: "14px" }}>
           ログイン中：
