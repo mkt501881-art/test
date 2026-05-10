@@ -123,6 +123,7 @@ export default function Page() {
           boxShadow: "2px 0 10px rgba(0,0,0,0.2)",
           padding: 20,
           zIndex: 1000,
+          paddingTop: 60,  // ← 追加 ✅
 
           transform: menuOpen ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease"
