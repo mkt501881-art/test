@@ -9,6 +9,7 @@ type Item = {
   status: string
   location: string
   owner: string
+  genre: string
 }
 
 export default function ItemPage() {
@@ -98,6 +99,11 @@ export default function ItemPage() {
             出品者
           </p>
           <p>{item.owner || "不明"}</p>
+
+          <p style={{ color: "#888", fontSize: "13px", marginTop: 15 }}>
+  ジャンル
+</p>
+<p>{item.genre || "不明"}</p>
 
         </div>
 
