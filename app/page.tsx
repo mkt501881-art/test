@@ -40,8 +40,8 @@ export default function Page() {
         onMouseDown={(e) => e.preventDefault()}
         style={{
           position: "fixed",   // ← もう一回これに戻す✅
-          top: 43,
-          left: 36,
+          top: 20,
+          left: 20,
 
           marginBottom: 10,
           width: 40,
