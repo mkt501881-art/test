@@ -28,24 +28,23 @@ export default function ItemPage() {
   const [number, setNumber] = useState("")
 
   // ✅ 自動解析（ここ重要）
-  useEffect(() => {
-    if (!session?.user?.email || !session?.user?.name) return
+useEffect(() => {
+  if (!session?.user?.email || !session?.user?.name) return
+
+  const raw = session.user.name
+
+  if (raw.length >= 5) {
+    const grade = raw[0]              // 学年
+    const cls = raw[1]                // 組
+    const num = raw.slice(2, 4)       // 出席番号
+    const realName = raw.slice(4)     // 名前
 
     setEmail(session.user.email)
-
-    const raw = session.user.name
-
-    // ✅ 分解ロジック
-    if (raw.length >= 5) {
-      const cls = raw[1]              // 2桁目
-      const num = raw.slice(2, 4)     // 3-4桁目
-      const realName = raw.slice(4)   // 5文字目以降
-
-      setClassName(cls)
-      setNumber(num)
-      setStudentName(realName)
-    }
-  }, [session])
+    setClassName(`${grade}年${cls}組`)  // ← ここ重要 ✅
+    setNumber(num)
+    setStudentName(realName)
+  }
+}, [session])
 
   useEffect(() => {
     fetch(
