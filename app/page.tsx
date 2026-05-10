@@ -42,6 +42,10 @@ export default function Page() {
   onClick={() => setMenuOpen(!menuOpen)}   // ← toggleに変更
   onMouseDown={(e) => e.preventDefault()}
   style={{
+    position: "fixed",   // ← 追加 ✅
+    top: 20,             // ← 上からの位置
+    left: 20,            // ← 左からの位置
+
     width: 40,
     height: 30,
     display: "flex",
