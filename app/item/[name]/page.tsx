@@ -127,3 +127,5 @@ export default function ItemPage() {
 >
   {isAvailable ? "📦 貸し出し申請" : "❌ 貸し出し中"}
 </button>
+
+</div>    </>
