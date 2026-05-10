@@ -1,14 +1,17 @@
 "use client"
 
+import { Noto_Sans_JP } from "next/font/google"
 import { SessionProvider } from "next-auth/react"
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const noto = Noto_Sans_JP({
+  subsets: ["latin"],
+})
+
+export default function RootLayout({ children }) {
   return (
     <html>
-      <body>
-        <SessionProvider>
-          {children}
-        </SessionProvider>
+      <body className={noto.className}>
+        {children}
       </body>
     </html>
   )
