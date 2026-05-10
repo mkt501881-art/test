@@ -9,6 +9,18 @@ import { signOut, useSession } from "next-auth/react"
 type Item = {
   name: string
   status: "available" | "using"
+  genre: string   // ✅ 追加
+}
+
+// ✅ ジャンル順
+const genreOrder = ["マンガ", "ライトノベル", "小説", "その他"]
+
+// ✅ ジャンルカラー
+const genreColor: Record<string, string> = {
+  マンガ: "#ff9800",
+  ライトノベル: "#9c27b0",
+  小説: "#2196f3",
+  その他: "#607d8b"
 }
 
 export default function Page() {
@@ -31,6 +43,16 @@ export default function Page() {
       })
   }, [])
 
+  // ✅ グループ分け
+  const grouped = data.reduce((acc: Record<string, Item[]>, item) => {
+    if (!acc[item.genre]) acc[item.genre] = []
+    acc[item.genre].push(item)
+    return acc
+  }, {})
+
+  // ✅ 順番固定
+  const sortedGenres = genreOrder.filter(g => grouped[g])
+
   return (
     <div style={{ padding: 20, background: "#f5f5f5", minHeight: "100vh" }}>
 
@@ -39,11 +61,9 @@ export default function Page() {
         onClick={() => setMenuOpen(!menuOpen)}
         onMouseDown={(e) => e.preventDefault()}
         style={{
-          position: "fixed",   // ← もう一回これに戻す✅
+          position: "fixed",
           top: 15,
           left: 30,
-
-          marginBottom: 10,
           width: 40,
           height: 30,
           display: "flex",
@@ -53,7 +73,6 @@ export default function Page() {
           background: "none",
           border: "none",
           cursor: "pointer",
-          padding: 0,
           outline: "none",
           zIndex: 1100
         }}
@@ -81,7 +100,7 @@ export default function Page() {
         }} />
       </button>
 
-      {/* ✅ 背景 */}
+      {/* 背景 */}
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
@@ -97,7 +116,7 @@ export default function Page() {
         />
       )}
 
-      {/* ✅ メニュー */}
+      {/* メニュー */}
       <div style={{
         position: "fixed",
         top: 0,
@@ -139,13 +158,12 @@ export default function Page() {
           }}
           style={{ cursor: "pointer", fontWeight: "bold" }}
         >
-            ホーム
+          ホーム
         </p>
       </div>
 
-      {/* ✅ タイトル */}
+      {/* タイトル */}
       <h1 style={{ fontSize: "28px" }}>貸し出し状況</h1>
-
       <p style={{ color: "#555" }}>最終更新: {updatedAt}</p>
 
       <button
@@ -164,41 +182,56 @@ export default function Page() {
         更新
       </button>
 
-      {/* ✅ カード */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
-        gap: 20
-      }}>
-        {data.map(item => (
-          <div
-            key={item.name}
-            onClick={() => router.push(`/item/${item.name}`)}
-            style={{
-              padding: 20,
-              borderRadius: "16px",
-              background: "#fff",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              cursor: "pointer"
-            }}
-          >
-            <h2 style={{ marginBottom: 10 }}>{item.name}</h2>
+      {/* ✅ ジャンルごと表示 */}
+      {sortedGenres.map((genre) => (
+        <div key={genre} style={{ marginBottom: 30 }}>
 
-            <span style={{
-              padding: "6px 12px",
-              borderRadius: "999px",
-              fontSize: "13px",
-              fontWeight: "bold",
-              background:
-                item.status === "available" ? "#e6f9ed" : "#fdeaea",
-              color:
-                item.status === "available" ? "#0a8f3d" : "#c80000"
-            }}>
-              {item.status === "available" ? "貸出可" : "貸出中"}
-            </span>
+          {/* ジャンルタイトル */}
+          <h2 style={{
+            marginBottom: 10,
+            fontSize: "18px",
+            borderLeft: `4px solid ${genreColor[genre]}`,
+            paddingLeft: 8
+          }}>
+            {genre}
+          </h2>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 300px))",
+            gap: 20
+          }}>
+            {grouped[genre].map(item => (
+              <div
+                key={item.name}
+                onClick={() => router.push(`/item/${item.name}`)}
+                style={{
+                  padding: 20,
+                  borderRadius: "16px",
+                  background: "#fff",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  cursor: "pointer"
+                }}
+              >
+                <h3>{item.name}</h3>
+
+                <span style={{
+                  padding: "6px 12px",
+                  borderRadius: "999px",
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                  background:
+                    item.status === "available" ? "#e6f9ed" : "#fdeaea",
+                  color:
+                    item.status === "available" ? "#0a8f3d" : "#c80000"
+                }}>
+                  {item.status === "available" ? "貸出可" : "貸出中"}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
 
     </div>
   )
