@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { ADMIN_EMAILS } from "@/lib/admin"
+import { ADMIN_EMAILS } from "@/lib/adomin"
 
 type Item = {
   name: string
