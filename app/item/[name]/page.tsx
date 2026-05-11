@@ -108,7 +108,14 @@ export default function ItemPage() {
           background: isAvailable ? "#e6f9ed" : "#fdeaea",
           color: isAvailable ? "#0a8f3d" : "#c80000"
         }}>
-          {isAvailable ? "貸出可" : "貸出中"}
+          {
+  isAvailable
+    ? "貸出可"
+    : isPending
+    ? "申請承認待ち"
+    : "貸出中"
+}
+
         </span>
 
         {/* ジャンル */}
