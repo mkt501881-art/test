@@ -233,18 +233,32 @@ export default function Page() {
               >
                 <h3>{item.name}</h3>
 
-                <span style={{
-                  padding: "6px 12px",
-                  borderRadius: "999px",
-                  fontSize: "13px",
-                  fontWeight: "bold",
-                  background:
-                    item.status === "available" ? "#e6f9ed" : "#fdeaea",
-                  color:
-                    item.status === "available" ? "#0a8f3d" : "#c80000"
-                }}>
-                  {item.status === "available" ? "貸出可" : "貸出中"}
-                </span>
+<span style={{
+  padding: "6px 12px",
+  borderRadius: "999px",
+  fontSize: "13px",
+  fontWeight: "bold",
+  background:
+    item.status === "available"
+      ? "#e6f9ed"
+      : item.status === "pending"
+      ? "#fff4e5"
+      : "#fdeaea",
+  color:
+    item.status === "available"
+      ? "#0a8f3d"
+      : item.status === "pending"
+      ? "#cc7700"
+      : "#c80000"
+}}>
+  {
+    item.status === "available"
+      ? "貸出可"
+      : item.status === "pending"
+      ? "申請承認待ち"
+      : "貸出中"
+  }
+</span>
               </div>
             ))}
           </div>
