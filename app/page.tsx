@@ -8,7 +8,7 @@ import { signOut, useSession } from "next-auth/react"
 
 type Item = {
   name: string
-  status: "available" | "using"
+  status: "available" | "pending" | "using"
   genre: string
 }
 
