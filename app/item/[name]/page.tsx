@@ -10,6 +10,9 @@ type Item = {
   location: string
   owner: string
   genre: string
+  borrower?: {
+    email: string
+  } | null
 }
 
 export default function ItemPage() {
@@ -27,24 +30,24 @@ export default function ItemPage() {
   const [className, setClassName] = useState("")
   const [number, setNumber] = useState("")
 
-  // ✅ 自動解析（ここ重要）
-useEffect(() => {
-  if (!session?.user?.email || !session?.user?.name) return
+  // ✅ 自動解析（そのまま）
+  useEffect(() => {
+    if (!session?.user?.email || !session?.user?.name) return
 
-  const raw = session.user.name
+    const raw = session.user.name
 
-  if (raw.length >= 5) {
-    const grade = raw[0]              // 学年
-    const cls = raw[1]                // 組
-    const num = raw.slice(2, 4)       // 出席番号
-    const realName = raw.slice(4)     // 名前
+    if (raw.length >= 5) {
+      const grade = raw[0]
+      const cls = raw[1]
+      const num = raw.slice(2, 4)
+      const realName = raw.slice(4)
 
-    setEmail(session.user.email)
-    setClassName(`${grade}年${cls}組`)  // ← ここ重要 ✅
-    setNumber(num)
-    setStudentName(realName)
-  }
-}, [session])
+      setEmail(session.user.email)
+      setClassName(`${grade}年${cls}組`)
+      setNumber(num)
+      setStudentName(realName)
+    }
+  }, [session])
 
   useEffect(() => {
     fetch(
@@ -61,7 +64,10 @@ useEffect(() => {
     return <p style={{ padding: 40 }}>読み込み中...</p>
   }
 
+  // ✅ 状態判定（追加）
   const isAvailable = item.status === "available"
+  const isPending = item.status === "pending"
+  const isMine = item.borrower?.email === email
 
   const genreColor: Record<string, string> = {
     マンガ: "#ff9800",
@@ -126,42 +132,79 @@ useEffect(() => {
           <p>{item.owner || "不明"}</p>
         </div>
 
-        {/* ボタン */}
+        {/* ✅ ボタン（ここだけ変更） */}
         <button
-          disabled={!isAvailable}
-          onClick={() => setShowForm(!showForm)}
+          disabled={!(isAvailable || (isPending && isMine))}
+          onClick={async () => {
+            try {
+
+              // ✅ 申請
+              if (isAvailable) {
+                setShowForm(!showForm)
+                return
+              }
+
+              // ✅ 取消
+              if (isPending && isMine) {
+                await fetch("https://test-discord-production.up.railway.app/cancel", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    name: item.name,
+                    user: email
+                  })
+                })
+
+                alert("✅ 申請を取り消しました")
+                location.reload()
+              }
+
+            } catch {
+              alert("❌ 失敗")
+            }
+          }}
           style={{
             marginTop: 20,
             width: "100%",
             padding: "12px",
             borderRadius: "10px",
             border: "none",
-            background: isAvailable ? "#007bff" : "#ccc",
+            background:
+              isAvailable
+                ? "#007bff"
+                : isPending && isMine
+                ? "#ff5722"
+                : "#ccc",
             color: "#fff"
           }}
         >
-          {isAvailable ? "📦 貸し出し申請" : "貸し出し中"}
+          {
+            isAvailable
+              ? "📦 貸し出し申請"
+              : isPending && isMine
+              ? "↩ 申請取消"
+              : "貸し出し中"
+          }
         </button>
 
-        {/* ✅ 確認UI */}
+        {/* ✅ 元の確認UIはそのまま */}
         {showForm && (
           <div style={{ marginTop: 20 }}>
-
             <p style={{ fontWeight: "bold", marginBottom: 10 }}>
               こちらの情報で間違いありませんか？
             </p>
 
-<div style={{
-  background: "#eee",
-  padding: 12,
-  borderRadius: 8,
-  fontSize: 14
-}}>
-  <p>メール: {email}</p>
-  <p>名前: {studentName}</p>
-  <p>所属: {className}</p>   {/* ← ここ変更 */}
-  <p>出席番号: {number}</p>
-</div>
+            <div style={{
+              background: "#eee",
+              padding: 12,
+              borderRadius: 8,
+              fontSize: 14
+            }}>
+              <p>メール: {email}</p>
+              <p>名前: {studentName}</p>
+              <p>所属: {className}</p>
+              <p>出席番号: {number}</p>
+            </div>
 
             <button
               onClick={async () => {
@@ -199,7 +242,6 @@ useEffect(() => {
             >
               申請する
             </button>
-
           </div>
         )}
 
