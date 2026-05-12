@@ -20,7 +20,7 @@ export default function ItemPage() {
   const params = useParams()
   const router = useRouter()
 
-  const name = params.name
+  const name = decodeURIComponent(params.name as string)
 
   const [item, setItem] = useState<Item | null>(null)
   const [showForm, setShowForm] = useState(false)
