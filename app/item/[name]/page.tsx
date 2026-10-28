@@ -216,7 +216,7 @@ export default function ItemPage() {
             <button
               onClick={async () => {
                 try {
-                  await fetch("https://test-discord-production.up.railway.app/request", {
+                  await fetch("https://script.google.com/macros/s/AKfycbzmHm1nWzdYp5qPthvdt1mIZ4sjtQaNxvmMBsGU3CDZ6l0h4N-gTEhttKjwcbXSU2Va/exec", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
